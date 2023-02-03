@@ -65,6 +65,39 @@ public class Main {
 				
 				lastArticleId++;
 			}
+			
+			else if (command.startsWith("article detail 1")) {
+				
+				String[] commandBits=command.split(" ");
+				//commandBits[0] == article
+				//commandBits[1] == detail
+				//commandBits[2] == ~
+				
+				int id =Integer.parseInt(commandBits[2]);
+				
+				boolean found = false;
+				Article foundarticle =null;
+				for(int i=0;i<articles.size();i++) {
+					//0, 1, 2-> index
+					//1, 2, 3-> id
+					Article article = articles.get(i);
+					if(article.id == id) {
+						found = true;
+						foundarticle = article;
+						break;
+					}
+				}
+				
+				if (found==false) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				System.out.printf(" 번호 : %d\n",foundarticle.id);
+				System.out.printf(" 날짜 : 2023-02-02\n");
+				System.out.printf(" 제목 : %s\n",foundarticle.title);
+				System.out.printf(" 내용 : %s\n",foundarticle.body);
+			}
+			
 
 			else {
 				System.out.println("존재하지 않는 명령어입니다.");
