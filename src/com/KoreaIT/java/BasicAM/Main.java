@@ -31,26 +31,26 @@ public class Main {
 			if (command.equals("system exit")) {
 				break;
 			}
-
+//=====================================================list=============================================================		
 			if (command.equals("article list")) {
 				if(articles.size()==0) {
 					System.out.println("게시글이 없습니다.");
 					continue;
 				}
-				System.out.printf("번호/ 제목 " ); 
+				System.out.printf(" 번호 / 제목 / 조회 " ); 
 				String tempTitle=null;
 				for(int i=articles.size()-1;i>=0;i--) {
 					Article article = articles.get(i);
 					
 					if(article.title.length()>4) {
 						tempTitle=article.title.substring(0,4);
-						System.out.printf(" %d /  %s\n" , article.id, tempTitle+"..."); 
+						System.out.printf(" %4d /  %6s  /  %4d\n" , article.id, tempTitle+"...",article.hit); 
 						continue;
 					}
-					System.out.printf(" %d /  %s\n" , article.id, article.title); 	
+					System.out.printf(" %4d /  %6s  /  %4d\n" , article.id, article.title, article.hit); 	
 				}			
 			}
-			
+//=====================================================write=============================================================			
 			else if (command.equals("article write")) {
 				String title, content; //현재 날짜 시간 String
 				SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
@@ -73,9 +73,9 @@ public class Main {
 				
 				lastArticleId++;
 			}
-			
+//=====================================================detail=============================================================			
 			else if (command.startsWith("article detail")) {
-				
+				int count =0;
 				String[] commandBits=command.split(" ");
 				//commandBits[0] == article
 				//commandBits[1] == detail
@@ -92,19 +92,58 @@ public class Main {
 					if(article.id == id) {
 						found = true;
 						foundarticle = article;
+						count+=1;
 						break;
 					}
-				}
-				
+				}				
 				if (foundarticle==null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
 				System.out.printf(" 번호 : %d\n",foundarticle.id);
-				System.out.printf(" 날짜 : 2023-02-02\n");
+				System.out.printf("날짜 : %s\n", foundarticle.regDate);
+				System.out.printf("수정 날짜 : %s\n",foundarticle.updateDate);
 				System.out.printf(" 제목 : %s\n",foundarticle.title);
 				System.out.printf(" 내용 : %s\n",foundarticle.body);
-			}			
+				System.out.printf("조회수 : %d\n", foundarticle.hit);
+				
+			}		
+//=====================================================modify=============================================================				
+			else if (command.startsWith("article modify")) {
+				String[] commandBits=command.split(" ");
+				
+				int id =Integer.parseInt(commandBits[2]);
+				
+				Article foundarticle =null;
+				
+				for(int i=0;i<articles.size();i++) {
+					Article article = articles.get(i);
+					if(article.id == id) {
+						foundarticle = article;
+						break;
+					}
+				}				
+				if (foundarticle==null) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				}
+				
+				System.out.printf("제목 : ");
+				String title = sc.nextLine();
+				System.out.printf("내용 : ");
+				String body = sc.nextLine();
+				SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+	            Date date = new Date(); //System.currentTimeMillis()
+	            foundarticle.updateDate = formatter.format(date);
+				
+				
+				foundarticle.title=title;
+				foundarticle.body=body;
+				
+				
+				System.out.printf("%d번 게시물을 수정했습니다.\n",id);
+			}
+//=====================================================delete=============================================================	
 			else if (command.startsWith("article delete")) {				
 				String[] commandBits=command.split(" ");
 				
@@ -120,8 +159,7 @@ public class Main {
 						foundIndex = i;
 						break;
 					}
-				}
-				
+				}				
 				if (foundIndex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
@@ -129,7 +167,7 @@ public class Main {
 				articles.remove(foundIndex);
 				System.out.printf("%s번째 게시물을 삭제했습니다.\n", id);
 			}
-
+//=====================================================끝=============================================================
 			else {
 				System.out.println("존재하지 않는 명령어입니다.");
 			}
@@ -148,11 +186,17 @@ class Article{
 	String title;
 	String body;
 	String regDate;
-	Article(int id, String title, String body, String regDate) {
+	int count;
+	String updateDate = " ";
+	int hit;
+	
+	Article(int id, String title, String body, String regDate ) {
 		this.id=id;
 		this.title=title;
 		this.body=body;
 		this.regDate = regDate;
+		this.hit=hit;
+		
 	}
 	
 }
