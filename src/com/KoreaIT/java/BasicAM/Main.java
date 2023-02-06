@@ -104,36 +104,30 @@ public class Main {
 				System.out.printf(" 날짜 : 2023-02-02\n");
 				System.out.printf(" 제목 : %s\n",foundarticle.title);
 				System.out.printf(" 내용 : %s\n",foundarticle.body);
-			}
-			
-			else if (command.startsWith("article delete")) {
-				
+			}			
+			else if (command.startsWith("article delete")) {				
 				String[] commandBits=command.split(" ");
-				//commandBits[0] == article
-				//commandBits[1] == detail
-				//commandBits[2] == ~
 				
 				int id =Integer.parseInt(commandBits[2]);
 				
-				boolean found = false;
 				Article foundarticle =null;
+				int foundIndex = -1;
+				
 				for(int i=0;i<articles.size();i++) {
-					//0, 1, 2-> index
-					//1, 2, 3-> id
 					Article article = articles.get(i);
 					if(article.id == id) {
-						found = true;
 						foundarticle = article;
+						foundIndex = i;
 						break;
 					}
 				}
 				
-				if (foundarticle==null) {
+				if (foundIndex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
-				articles.remove(id-1);
-				System.out.printf("%s번째 게시물을 삭제했습니다.", id);
+				articles.remove(foundIndex);
+				System.out.printf("%s번째 게시물을 삭제했습니다.\n", id);
 			}
 
 			else {
